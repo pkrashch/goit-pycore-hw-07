@@ -33,20 +33,17 @@ def parse_input(user_input):
 
 @input_error
 def add_contact(args, book):
-    """Adds a new contact record or a new phone number to an existing record."""
     name, phone, *_ = args
+    record = book.data.get(name) 
+    message = "Contact updated."
     
-    try:
-        # Try to find existing record
-        record = book.find(name)
-        record.add_phone(phone)
-        return "Contact updated (phone added)."
-    except KeyError:
-        # If not found, create a new record
+    if record is None:
         record = Record(name)
         book.add_record(record)
-        record.add_phone(phone)
-        return "Contact added."
+        message = "Contact added."
+    if phone:
+        record.add_phone(phone)  
+    return message
 
 @input_error
 def change_contact(args, book):
